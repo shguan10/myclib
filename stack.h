@@ -1,14 +1,18 @@
+/*
+Stack implementation
+*/
+
 #ifndef _LLSTACK_H_
 #define _LLSTACK_H_
 
-#include "xalloc.h"
+//#include "xalloc.h"
 #include <stdlib.h>
 
 typedef void *elem;
 typedef struct stack_header llstack;
 typedef struct llnode_header llnode;
 
-typedef void elem_free_fn(elem e);
+typedef void stack_elem_free_fn(elem e);
 typedef void stack_e_print_fn(elem e);
 
 
@@ -37,7 +41,7 @@ bool inline stack_empty(llstack *s){
 }
 
 llstack *newstack(){
-  llstack *s = (llstack *) xmalloc(sizeof(llstack));
+  llstack *s = (llstack *) malloc(sizeof(llstack));
   //s->nobj = 0;
   s->top = NULL;
   return s;
@@ -45,7 +49,7 @@ llstack *newstack(){
 
 void push(llstack *s,elem e){
   //requires s!=NULL
-  llnode *n = (llnode *) xmalloc(sizeof(llnode));
+  llnode *n = (llnode *) malloc(sizeof(llnode));
   n->data = e;
   n->next=s->top;
   s->top=n;
@@ -68,7 +72,7 @@ elem pop(llstack *s){
   return e;
 }
 
-void free_stack(llstack *s,elem_free_fn *efree){
+void free_stack(llstack *s,stack_elem_free_fn *efree){
   while(!stack_empty(s)){
     elem e =pop(s);
     if(efree!=NULL)efree(e);
