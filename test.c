@@ -12,18 +12,37 @@ void printinfo(uba *u){
 
 int main(){
   uba *u= newuba(sizeof(int), 1250);
-  printinfo(u);
+  //printinfo(u);
   for(int i = 0;i<5000;i++) {
     int *e = (int *)malloc(sizeof(int));
     *e = i;
     addelem(u, (elem *)e);
     free(e);
-    printinfo(u);
+    //printinfo(u);
   }
   printf("\n");
-  for(size_t i = 0;i<u->nobj;i++)printf("%d, ",*(int *)getelem(u,i));
+  uba *u2= newuba(sizeof(int), 1250);
+  //printinfo(u);
+  for(int i = 0;i<5000;i++) {
+    int *e = (int *)malloc(sizeof(int));
+    *e = i;
+    addelem(u2, (elem *)e);
+    free(e);
+    //printinfo(u);
+  }
+  printinfo(u2);
+  printf("\n");
+
+  addelems(u2,u->data,u->nobj);
+
+  printinfo(u2);
+  printf("\n");
+
+  for(size_t i = 0;i<u2->nobj;i++)printf("%d, ",*(int *)getelem(u2,i));
+  printf("\n");
 
   freeuba(u,NULL);
+  freeuba(u2,NULL);
   return 0;
   
 }

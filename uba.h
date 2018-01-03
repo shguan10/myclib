@@ -26,6 +26,11 @@ void addelem(uba *u, const elem *e);
 //requires e to be pointing to a space of size u->objsize
 //NOTE, this function COPIES the bytes pointed to by e
 
+void addelems(uba *u, const elem *e, size_t enobj);
+//requires u->nobj <= (SIZE_MAX / 2)
+//requires e to be pointing to a space of size enobj * u->objsize
+//NOTE, this function COPIES the bytes pointed to by e
+
 elem *getelem(uba *u, size_t i);
 //returns NULL if i >= u->nobj
 
@@ -50,14 +55,25 @@ void addelem(uba *u, const elem *e){
   u->nobj++;
   if(u->nobj < u->limit) return;
   //nobj == limit
-  size_t newlimit=0;
-  if(u->limit*2 < u->limit) newlimit=SIZE_MAX;
-  else newlimit=2*u->limit;
-  void *t = malloc(newlimit*u->objsize);
+  u->limit =( u->limit*2 <= u->limit? SIZE_MAX : u->nobj*2);//TODO is this correct?
+  void *t = malloc(u->limit*u->objsize);
   memcpy(t,u->data,u->nobj*u->objsize);
-  u->limit = newlimit;
   free(u->data);
   u->data = t;
+}
+
+void addelems(uba *u, const elem *e, size_t enobj){
+  //calculate whether enobj goes over
+  if(enobj + u->nobj >= u->limit ){
+    u->limit =( u->limit*2 <= u->limit? SIZE_MAX : (u->nobj + enobj)*2);//TODO is this correct?
+    void *t = malloc(u->limit*u->objsize);
+    memcpy(t,u->data,u->nobj*u->objsize);
+    free(u->data);
+    u->data = t;
+  }
+  memcpy(ADDR(u,u->nobj),e,enobj*u->objsize);
+  u->nobj+=enobj;
+  return;
 }
 
 elem *getelem(uba *u, size_t i){
