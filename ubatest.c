@@ -14,10 +14,11 @@ int main(){
   uba *u= newuba(sizeof(int), 1250);
   //printinfo(u);
   for(int i = 0;i<5000;i++) {
-    int *e = (int *)malloc(sizeof(int));
-    *e = i;
-    addelem(u, (elem *)e);
-    free(e);
+    // int *e = (int *)malloc(sizeof(int));
+    // *e = i;
+    // addelem(u, (elem *)e);
+    // free(e);
+    addelem(u,&i);
     //printinfo(u);
   }
   printf("\n");
