@@ -1,5 +1,10 @@
 #include "uba.h"
-#define ADDR(U,I) ((U)->data + (U)->objsize*(I))
+
+//gets the address of the ith element, used as a helper function
+//requires U not NULL, I is a valid index
+elem *ADDR(uba *U,size_t I){
+  return U->data + U->objsize*I;
+}
 
 //newuba returns a uba pointer, and initializes the uba to have limit initlimit
 //requires objsize > 0, nobj > 0
